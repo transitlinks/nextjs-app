@@ -1,0 +1,23 @@
+html,
+body {
+    margin: 0;
+    color: #222;
+    font-weight: 100;
+    font-size: 1em;
+    font-family: Segoe UI,HelveticaNeue-Light,sans-serif;
+    line-height: 1.375;
+}
+
+a {
+    color: #0074c2;
+    text-decoration-thickness: 1px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    border-style: none;
+    vertical-align: middle;
+}

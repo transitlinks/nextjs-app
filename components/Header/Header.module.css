@@ -1,0 +1,79 @@
+.root {
+  background: #fff;
+  color: #000;
+}
+
+.container {
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  margin-top: -4px;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  margin-top: -4px;
+}
+
+.logoBar {
+  margin-right: 8px;
+  margin-top: 0;
+}
+
+.logoBar .logoBarText {
+  margin-left: 2px;
+}
+
+.logoBar .logoBarText .logoBarName {
+  font-size: 20px;
+}
+
+.logoBar .logoBarText .logoBarCaption {
+  font-size: 13px;
+  margin-left: 1px;
+  margin-top: -4px;
+}
+
+.logo {
+  margin-top: 4px;
+  margin-right: 4px;
+}
+
+.loginLinkContainer {
+  display: flex;
+  align-items: center;
+}
+
+.loginLink {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 1.125em;
+  text-decoration: none;
+  color: rgba(0,0,0,.6);
+}
+
+.naviButton {
+
+}
+
+.naviButton a {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 1.75em;
+  margin-right: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.naviButton a svg {
+  margin-top: 4px;
+}

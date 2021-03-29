@@ -1,0 +1,10 @@
+.root {
+  position: relative;
+}
+
+.maskToggle {
+  position: absolute;
+  right: 0px;
+  top: 20px;
+  cursor: pointer;
+}

@@ -1,0 +1,36 @@
+.container {
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.avatar img {
+  width: 40px;
+  position: absolute;
+}
+
+.loginLink {
+  display: inline-block;
+  padding: 3px 8px;
+  text-decoration: none;
+  font-size: 1.125em; /* ~18px */
+  cursor: pointer;
+}
+
+.loginLink,
+.loginLink:active,
+.loginLink:visited {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.loginLink:hover {
+  color: rgba(0, 0, 0, 1);
+  text-decoration: none;
+}

@@ -1,0 +1,46 @@
+.container {
+}
+
+.header {
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerLeft {
+  display: flex;
+  margin-top: -4px;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  margin-top: -7px;
+}
+
+.logoBar {
+  margin-right: 8px;
+  margin-top: 0;
+}
+
+.logoBar .logoBarText {
+  margin-left: 2px;
+}
+
+.logoBar .logoBarText .logoBarName {
+  font-size: 20px;
+}
+
+.logoBar .logoBarText .logoBarCaption {
+  font-size: 13px;
+  margin-left: 1px;
+  margin-top: -4px;
+}
+
+.logo {
+  margin-top: 4px;
+  margin-right: 4px;
+}

@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
-import { createStore, applyMiddleware, Middleware } from 'redux';
+import { createStore, applyMiddleware, Middleware, AnyAction, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import reduxLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import reducers, { RootState } from './reducers';
 
-let store: {
-  getState: () => {}
-} | undefined;
+let store: Store<any, AnyAction> | undefined;
 
 function initStore(initialState: RootState) {
 

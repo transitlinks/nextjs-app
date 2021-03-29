@@ -5,7 +5,7 @@ import useSWR from 'swr';
 
 import { setAuth } from './state/actions/auth';
 
-const fetcher = (url) =>
+const fetcher = (url: string) =>
   fetch(url)
     .then((r) => r.json())
     .then((data) => {

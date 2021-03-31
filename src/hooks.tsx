@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import Router from 'next/router';
 import useSWR from 'swr';
 
 import { setAuth } from './state/actions/auth';
@@ -16,7 +15,7 @@ interface UseUserProps {
   redirectTo: string;
 }
 
-export function useUser(options?: UseUserProps) {
+export const useUser = (options?: UseUserProps): void => {
 
   const { data, error } = useSWR('/auth/user', fetcher);
   const finished = Boolean(data);
@@ -26,7 +25,8 @@ export function useUser(options?: UseUserProps) {
     if (!data) return;
     if (data.user) dispatch(setAuth({ user: data.user, loggedIn: true }));
     if (options && data.user) {
-      Router.push(options.redirectTo);
+      console.log('Redirecting');
+      window.location.href = options.redirectTo;
     }
   }, [finished]);
 

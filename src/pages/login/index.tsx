@@ -6,7 +6,7 @@ import { GetServerSideProps } from 'next';
 import Button from '@material-ui/core/Button';
 import { useUser } from '../../hooks';
 import Layout from '../../components/Layout';
-import ValidatedInput, { InputState } from '../../components/ValidatedInput/ValidatedInput';
+import ValidatedInput, { InputState, TextInputState } from '../../components/ValidatedInput/ValidatedInput';
 import { isValidEmail, isValidPassword } from '../../components/ValidatedInput/validators';
 import { setAuth } from '../../state/actions/auth';
 import styles from './login.module.css';
@@ -29,8 +29,8 @@ const Login = ({ env }: LoginProps) => {
   useUser({ redirectTo: '/' });
 
   const [errorMsg, setErrorMsg] = useState('');
-  const [email, setEmail] = useState<InputState>({ value: '', pass: false });
-  const [password, setPassword] = useState<InputState>({ value: '', pass: false });
+  const [email, setEmail] = useState<TextInputState>({ value: '', pass: false });
+  const [password, setPassword] = useState<TextInputState>({ value: '', pass: false });
 
   const dispatch = useDispatch();
 
@@ -65,7 +65,7 @@ const Login = ({ env }: LoginProps) => {
       }
 
     } catch (error) {
-      console.error('Error in login', error);
+      console.error('Error in login', error.message);
       setErrorMsg(error.message);
     }
 
@@ -124,7 +124,7 @@ const Login = ({ env }: LoginProps) => {
                                 name="email"
                                 value={email.value}
                                 validate={isValidEmail}
-                                onChange={(email: InputState) => setEmail(email)} />
+                                onChange={(email: TextInputState) => setEmail(email)} />
               </div>
             </div>
             <div className={styles.formItem}>
@@ -134,7 +134,7 @@ const Login = ({ env }: LoginProps) => {
                                 value={password.value}
                                 validate={isValidPassword}
                                 masked={true}
-                                onChange={(password: InputState) => setPassword(password)} />
+                                onChange={(password: TextInputState) => setPassword(password)} />
               </div>
             </div>
             <div className={styles.formSubmit}>

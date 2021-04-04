@@ -4,7 +4,9 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "es2017",
+      "esnext.asynciterable"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -26,6 +28,7 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "../node_modules"
+    "../node_modules",
+    "src/types/graphql-global-types.ts"
   ]
 }

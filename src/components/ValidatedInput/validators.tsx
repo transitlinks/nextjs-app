@@ -4,7 +4,31 @@ export interface ValidationResult {
   pass?: boolean;
 }
 
-export const isValidPassword = (password: string): ValidationResult => {
+export function isValidUsername(username: string | null | undefined): ValidationResult {
+
+  if (!username) {
+    return {
+      text: 'Username'
+    };
+  }
+
+  if ((username.trim()).length < 4) {
+    return {
+      text: 'Username too short',
+      color: 'orange'
+    };
+  }
+
+  return {
+    text: 'Username',
+    color: 'green',
+    pass: true
+  };
+
+
+}
+
+export const isValidPassword = (password: string | null | undefined): ValidationResult => {
 
   if (!password) {
     return {
@@ -27,7 +51,7 @@ export const isValidPassword = (password: string): ValidationResult => {
 
 };
 
-export const isValidEmail = (email: string) => {
+export const isValidEmail = (email: string | null | undefined): ValidationResult => {
 
   if (!email) {
     return {

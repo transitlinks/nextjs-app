@@ -3,7 +3,7 @@ import styles from './Layout.module.css';
 import Header from './Header/Header';
 
 interface LayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 const Layout = ({ children } : LayoutProps) => {

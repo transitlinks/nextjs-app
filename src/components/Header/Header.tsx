@@ -1,7 +1,11 @@
 import ExploreIcon from '@material-ui/icons/Explore';
 import DirectionsIcon from '@material-ui/icons/Directions';
 import styles from './Header.module.css';
-import UserControls from './UserControls';
+
+import dynamic from "next/dynamic";
+const UserControls = dynamic(() => import('./UserControls'), { ssr: false });
+
+//import UserControls from './UserControls';
 
 const Header = () => {
 

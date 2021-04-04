@@ -6,17 +6,20 @@ import { ValidationResult } from './validators';
 
 
 export interface InputState {
-  value: string;
   pass?: boolean;
+}
+
+export interface TextInputState extends InputState {
+  value: string;
 }
 
 interface ValidatedInputProps {
   id: string;
   name?: string;
-  value: string;
-  validate: (value: string) => ValidationResult;
+  value: string | null | undefined;
+  validate: (value: string | null | undefined) => ValidationResult;
   masked?: boolean;
-  onChange: (input: InputState) => void;
+  onChange: (input: TextInputState) => void;
 }
 
 const ValidatedInput = ({ id, name, value, validate, masked, onChange }: ValidatedInputProps) => {

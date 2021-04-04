@@ -21,6 +21,8 @@ export const useUser = (options?: UseUserProps): void => {
   const finished = Boolean(data);
   const dispatch = useDispatch();
 
+  console.log('fetching user', data);
+
   useEffect(() => {
     if (!data) return;
     if (data.user) dispatch(setAuth({ user: data.user, loggedIn: true }));

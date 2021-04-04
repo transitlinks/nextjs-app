@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
+import { ApolloProvider } from '@apollo/client';
 import { useStore } from '../state/store';
+import apolloClient from '../apolloClient';
 import '../styles/global.css';
+
 
 const App = ({ Component, pageProps }: AppProps) => {
 
@@ -20,9 +23,11 @@ const App = ({ Component, pageProps }: AppProps) => {
   });
 
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+    <ApolloProvider client={apolloClient}>
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
+    </ApolloProvider>
   )
 
 };

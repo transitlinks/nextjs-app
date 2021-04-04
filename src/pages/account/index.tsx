@@ -15,9 +15,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }: GetServerS
     context: { headers: { cookie: req.headers.cookie } }
   });
 
-  const { MEDIA_URL } = process.env;
+  const { MEDIA_URL, APP_URL } = process.env;
 
-  return { props: { user: data.getUser, env: { MEDIA_URL } } };
+  return { props: { user: data.getUser, env: { MEDIA_URL, APP_URL } } };
 
 };
 

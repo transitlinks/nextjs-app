@@ -16,10 +16,10 @@ interface LoginProps {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { MEDIA_URL } = process.env;
+  const { MEDIA_URL, APP_URL } = process.env;
   return {
     props: {
-      env: { MEDIA_URL }
+      env: { MEDIA_URL, APP_URL }
     }
   };
 };

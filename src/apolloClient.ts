@@ -3,12 +3,37 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error';
 import * as https from "https";
 
-const httpLink = createHttpLink({
-  uri: 'https://local.transitlinks.net/v2/graphql',
-  fetchOptions: {
-    agent: new https.Agent({ rejectUnauthorized: false }),
-  },
-});
+const getHttpLink = (appUri?: string) => {
+
+  const graphQlUri = `${appUri || process.env.APP_URL}/v2/graphql`;
+  console.log('GraphQL @ ' + graphQlUri);
+
+  const httpLink = createHttpLink({
+    uri: graphQlUri,
+    fetchOptions: {
+      agent: new https.Agent({ rejectUnauthorized: false }),
+    },
+  });
+
+  return httpLink;
+
+};
+
+const getServerHttpLink = () => {
+
+  const graphQlUri = `${process.env.APP_URL}/v2/graphql`;
+  console.log('GraphQL @ ' + graphQlUri);
+
+  const httpLink = createHttpLink({
+    uri: graphQlUri,
+    fetchOptions: {
+      agent: new https.Agent({ rejectUnauthorized: false }),
+    },
+  });
+
+  return httpLink;
+
+};
 
 const authLink = setContext((_, { headers }) => {
   return {
@@ -36,13 +61,17 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 let cache = new InMemoryCache();
 
-const client = new ApolloClient({
-  link: from([
-    errorLink,
-    authLink,
-    httpLink
-  ]),
-  cache
-});
+export const getClient = (appUri?: string) => {
+  const client = new ApolloClient({
+    link: from([
+      errorLink,
+      authLink,
+      getHttpLink(appUri)
+    ]),
+    cache
+  });
+  return client;
+};
 
-export default client;
+
+export default getClient();

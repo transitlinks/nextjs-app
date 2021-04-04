@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 import { useStore } from '../state/store';
-import apolloClient from '../apolloClient';
+import { getClient } from '../apolloClient';
 import '../styles/global.css';
 
 
@@ -23,7 +23,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   });
 
   return (
-    <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={getClient(pageProps?.env?.APP_URL)}>
       <Provider store={store}>
         <Component {...pageProps} />
       </Provider>

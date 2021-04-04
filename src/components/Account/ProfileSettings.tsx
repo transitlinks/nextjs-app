@@ -44,7 +44,7 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
                               validate={isValidUsername}
                               onChange={(usernameInput: TextInputState) => {
                                 setUsernameInput(usernameInput);
-                                onChange({ pass: usernameInput.pass, changed: true, value: { username: usernameInput.value } });
+                                onChange({ pass: usernameInput.pass, value: { username: usernameInput.value } });
                               }} />
             </div>
           </div>

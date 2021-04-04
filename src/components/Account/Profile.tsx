@@ -27,8 +27,6 @@ const Profile = ({ user }: ProfileProps) => {
 
   let { uuid } = profileUser || {};
 
-  console.log('USER IN PROFILE', user, profileUser);
-
   const [emailInput, setEmailInput] = useState<TextInputState>({ value: user?.email || '', pass: true });
   const [profileSettingsInput, setProfileSettingsInput] = useState<ProfileSettingsInputState>({
     value: {
@@ -84,8 +82,6 @@ const Profile = ({ user }: ProfileProps) => {
 
   const valuesValid = emailInput.pass && profileSettingsInput.pass;
 
-  console.log('input values', emailInput, profileSettingsInput);
-  
 	return (
     <div>
       <div>

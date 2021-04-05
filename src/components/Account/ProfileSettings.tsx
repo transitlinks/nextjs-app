@@ -87,7 +87,7 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
                     setProfileSettings(profileSettingsValues);
                     onChange({ pass: usernameInput.pass, value: profileSettingsValues });
                   }}
-                  image={avatarFile || `${env.MEDIA_URL}${user.avatarSource}?${(new Date()).getTime()}`}
+                  image={avatarFile || `${env.MEDIA_URL}${user?.avatarSource}?${(new Date()).getTime()}`}
                   width={74}
                   height={74}
                   border={2}

@@ -43,7 +43,7 @@ const Account = ({ user }: AccountProps) => {
             </Button>
           </div>
           <div>
-            <Profile user={user} />
+            <Profile user={user} withAccount={true} />
           </div>
         </div>
       </main>

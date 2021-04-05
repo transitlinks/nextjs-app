@@ -36,14 +36,24 @@
   margin-bottom: 6px;
 }
 
-.avatar .avatarImage img {
-  width: 100%;
+.avatar .editAvatar {
+  position: relative;
+}
+
+.avatar .editAvatar .avatarEditor {
+  display: block;
+  position: relative;
+  width: 200px;
+  height: 200px;
 }
 
 .avatar .editAvatar .editAvatarButton {
   margin-top: -83px;
   margin-left: -34px;
   position: absolute;
+}
+
+.avatar .editAvatar .avatarPreview {
 }
 
 

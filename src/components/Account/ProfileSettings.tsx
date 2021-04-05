@@ -1,50 +1,49 @@
 import styles from './ProfileSettings.module.css';
-import { useState } from "react";
-import AvatarEditor, { AvatarEditorProps, Position } from 'react-avatar-editor';
-import ValidatedInput, { InputState, TextInputState } from "../ValidatedInput/ValidatedInput";
+import { ChangeEvent, ChangeEventHandler, EventHandler, FormEvent, FormEventHandler, useState } from "react";
+import ValidatedInput, { TextInputState } from "../ValidatedInput/ValidatedInput";
 import { isValidUsername } from "../ValidatedInput/validators";
-import Button from "@material-ui/core/Button";
 import { UserInput } from "../../generated/types/globalTypes";
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import { useSelector } from "react-redux";
 import { RootState } from "../../state/reducers";
 import { EnvState } from "../../state/types/global";
-
-export interface ProfileSettingsInputState extends InputState {
-  value: UserInput;
-  avatarEditor?: any | null;
-  avatarFile?: string | null;
-}
+import AvatarEditor, { Position } from "react-avatar-editor";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 
 interface ProfileSettingsProps {
-  user: any;
-  saveProfileSettings: any;
-  onChange: (input: ProfileSettingsInputState) => void;
-  withSubmit?: boolean
+  profileSettingsValues: UserInput;
+  onChangeUsername: (input: TextInputState) => void;
+  onChangeAvatarFile: (avatarFile: string) => void;
+  onChangeAvatarPosition: (avatarFile: Position) => void;
+  onLoadAvatarEditor: (avatarEditor: any) => void;
 }
 
-const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: ProfileSettingsProps) => {
+const ProfileSettings = (
+  {
+    profileSettingsValues,
+    onChangeUsername,
+    onChangeAvatarFile,
+    onLoadAvatarEditor,
+    onChangeAvatarPosition
+  }: ProfileSettingsProps) => {
 
   const env = useSelector<RootState, EnvState>((state) => state.env);
 
-  const [usernameInput, setUsernameInput] = useState<TextInputState>({ value: user?.username, pass: false });
-  const [avatarFile, setAvatarFile] = useState<string | null>(null);
+  const { avatarSource, avatarX, avatarY, username } = profileSettingsValues;
+  const initialAvatarSource = avatarSource ? `${env.MEDIA_URL}${avatarSource}` : null;
+
+  const [usernameInput, setUsernameInput] = useState<TextInputState>({ value: username || '', pass: false });
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarEditor, setAvatarEditor] = useState<any | null>(null);
-  const [avatarPosition, setAvatarPosition] = useState<Position | null>({ x: user?.avatarX || 0, y: user?.avatarY || 0 });
-  const [avatarEditorLoaded, setAvatarEditorLoaded] = useState<boolean>(false);
+  const [avatarPosition, setAvatarPosition] = useState<Position>({ x: avatarX || 0, y: avatarY || 0 });
 
-  const [profileSettings, setProfileSettings] = useState<UserInput>({});
-
-  const onFileInputChange = (event: any) => {
-    setAvatarFile(event.target.files[0]);
-    const profileSettingsValues = { ...profileSettings, avatarFile: event.target.files[0] };
-    setProfileSettings(profileSettingsValues);
-    onChange({ pass: usernameInput.pass, value: profileSettingsValues });
-    console.log('profile.avatarFile', event.target.files[0]);
-  };
-
-  const saveUserProfile = () => {
-    saveProfileSettings();
+  const onFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const target = event.target;
+    const files = target.files;
+    if (files && files.length > 0) {
+      const [file] = files;
+      setAvatarFile(file);
+      onChangeAvatarFile(file.name);
+    }
   };
 
   return (
@@ -60,11 +59,9 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
                               name="username"
                               value={usernameInput.value}
                               validate={isValidUsername}
-                              onChange={(usernameInput: TextInputState) => {
-                                setUsernameInput(usernameInput);
-                                const profileSettingsValues = { ...profileSettings, username: usernameInput.value };
-                                setProfileSettings(profileSettingsValues);
-                                onChange({ pass: usernameInput.pass, value: profileSettingsValues });
+                              onChange={(input: TextInputState) => {
+                                setUsernameInput(input);
+                                onChangeUsername(input);
                               }} />
             </div>
           </div>
@@ -72,26 +69,22 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
             {
               <div className={styles.editAvatar}>
                 <AvatarEditor
-                  ref={(editor: any | null) => {
-                    if (!avatarEditor && editor?.loaded) {
-                      console.log('ref', editor);
+                  ref={(editor: AvatarEditor & { loaded: boolean }) => {
+                    if (!avatarEditor && editor && !editor.loaded) {
+                      editor.loaded = true;
                       setAvatarEditor(editor);
-                      const profileSettingsValues = { ...profileSettings, avatarEditor: editor };
-                      setProfileSettings(profileSettingsValues);
-                      onChange({ pass: usernameInput.pass, value: profileSettingsValues });
+                      onLoadAvatarEditor(editor);
                     }
                   }}
-                  onPositionChange={(position: Position) => {
+                  onPositionChange={(position) => {
                     setAvatarPosition(position);
-                    const profileSettingsValues = { ...profileSettings, avatarX: position?.x || 0, avatarY: position?.y || 0 };
-                    setProfileSettings(profileSettingsValues);
-                    onChange({ pass: usernameInput.pass, value: profileSettingsValues });
+                    onChangeAvatarPosition(position);
                   }}
-                  image={avatarFile || `${env.MEDIA_URL}${user?.avatarSource}?${(new Date()).getTime()}`}
+                  image={avatarFile || `${initialAvatarSource}?${(new Date()).getTime()}`}
                   width={74}
                   height={74}
                   border={2}
-                  position={avatarPosition || { x: user?.avatarX || 0, y: user?.avatarY || 0 }}
+                  position={avatarPosition}
                   borderRadius={37}
                   color={[255, 255, 255, 0.6]} // RGBA
                   scale={1}
@@ -101,7 +94,6 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
                   <input type="file" name="file" id="file" onChange={onFileInputChange} className={styles.fileInput} />
                   <label htmlFor="file">
                     <AddAPhotoIcon style={{ fontSize: '30px' }} onClick={() => {
-
                     }} />
                   </label>
                 </div>
@@ -109,14 +101,6 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
             }
           </div>
         </div>
-        {
-          withSubmit &&
-            <div className={styles.submit}>
-              <Button className={styles.button} variant="contained" disabled={!usernameInput.pass} onClick={saveUserProfile}>
-                Confirm profile settings
-              </Button>
-            </div>
-        }
       </div>
     </div>
   );

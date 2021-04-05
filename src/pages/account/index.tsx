@@ -4,18 +4,21 @@ import Button from '@material-ui/core/Button';
 import Layout from '../../components/Layout';
 import styles from './account.module.css';
 import Profile from "../../components/Account/Profile";
-import apolloClient from "../../apolloClient";
+import { getClient } from "../../apolloClient";
 import { GET_USER } from "../../queries/user";
 import { UserInput } from "../../generated/types/globalTypes";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }: GetServerSidePropsContext) => {
 
+  const apolloClient = getClient(process.env.APP_URL);
   const { data } = await apolloClient.query({
     query: GET_USER,
-    context: { headers: { cookie: req.headers.cookie } }
+    context: { headers: { cookie: req.headers.cookie } },
+    fetchPolicy: 'no-cache'
   });
 
   const { MEDIA_URL, APP_URL } = process.env;
+  console.log('query data', data);
 
   return { props: { user: data.getUser, env: { MEDIA_URL, APP_URL } } };
 

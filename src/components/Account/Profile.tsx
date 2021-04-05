@@ -6,14 +6,19 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { updateUser, updateUserVariables } from "../../generated/types/updateUser";
 import { UPDATE_USER } from '../../queries/user';
-import ProfileSettings, { ProfileSettingsInputState } from './ProfileSettings';
+import { ProfileSettingsInputState } from './ProfileSettings';
 import { UserInput } from '../../generated/types/globalTypes';
+
+import dynamic from "next/dynamic";
+const ProfileSettings = dynamic(() => import('./ProfileSettings'), { ssr: false });
 
 interface ProfileProps {
   user: UserInput;
 }
 
 const Profile = ({ user }: ProfileProps) => {
+
+  console.log('prop user', user);
 
   const getUpdateUserMutation = () => useMutation<
     updateUser,
@@ -57,6 +62,9 @@ const Profile = ({ user }: ProfileProps) => {
     }
   }, [updatedPassword, updatedPasswordError]);
 
+  const uploadFiles = () => {
+  };
+
   const savePassword = () => {
     return updatePassword({
       variables: {
@@ -66,11 +74,40 @@ const Profile = ({ user }: ProfileProps) => {
     });
   };
 
-  const saveProfileSettings = (uuid: string, values: any) => {
+  const saveProfileSettings = (input?: UserInput) => {
+
+    const { avatarFile, avatarEditor } = profileSettingsInput;
+    if (avatarFile) {
+
+      /*
+      uploadFiles({
+        entityType: 'AvatarSource',
+        entityUuid: uuid!
+      }, [avatarFile]);
+       */
+
+    }
+
+    if (avatarFile) {
+      const canvasScaled = avatarEditor.getImageScaledToCanvas();
+      canvasScaled.toBlob((blob: any) => {
+        const file = new File([blob], `${uuid}.jpg`, { type: 'image/jpeg' });
+        /*
+        uploadFiles({
+          entityType: 'Avatar',
+          entityUuid: uuid
+        }, [file]);
+         */
+      }, 'image/jpeg');
+    }
+
     return updateProfileSettings({
       variables: {
-        uuid,
-        values
+        uuid: uuid!,
+        values: input || {
+          ...profileSettingsInput.value,
+          email: emailInput.value
+        }
       }
     });
   };
@@ -100,7 +137,7 @@ const Profile = ({ user }: ProfileProps) => {
           <div className={styles.save}>
             { !valuesChanged && updateProfileSettingsResultMessage }
             <Button className={styles.button} variant="contained" disabled={!valuesChanged || !valuesValid}
-                    onClick={() => saveProfileSettings(uuid!, { email: emailInput.value, ...profileSettingsInput.value })}>
+                    onClick={() => saveProfileSettings()}>
               Save
             </Button>
           </div>

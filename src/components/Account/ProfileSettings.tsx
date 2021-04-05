@@ -30,7 +30,7 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
   const [usernameInput, setUsernameInput] = useState<TextInputState>({ value: user?.username, pass: false });
   const [avatarFile, setAvatarFile] = useState<string | null>(null);
   const [avatarEditor, setAvatarEditor] = useState<any | null>(null);
-  const [avatarPosition, setAvatarPosition] = useState<Position | null>({ x: user.avatarX, y: user.avatarY });
+  const [avatarPosition, setAvatarPosition] = useState<Position | null>({ x: user?.avatarX || 0, y: user?.avatarY || 0 });
   const [avatarEditorLoaded, setAvatarEditorLoaded] = useState<boolean>(false);
 
   const [profileSettings, setProfileSettings] = useState<UserInput>({});

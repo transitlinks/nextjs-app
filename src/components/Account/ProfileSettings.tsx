@@ -83,7 +83,7 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
                   }}
                   onPositionChange={(position: Position) => {
                     setAvatarPosition(position);
-                    const profileSettingsValues = { ...profileSettings, avatarX: position.x, avatarY: position.y };
+                    const profileSettingsValues = { ...profileSettings, avatarX: position?.x || 0, avatarY: position?.y || 0 };
                     setProfileSettings(profileSettingsValues);
                     onChange({ pass: usernameInput.pass, value: profileSettingsValues });
                   }}
@@ -91,7 +91,7 @@ const ProfileSettings = ({ user, saveProfileSettings, onChange, withSubmit }: Pr
                   width={74}
                   height={74}
                   border={2}
-                  position={avatarPosition || { x: user.avatarX, y: user.avatarY }}
+                  position={avatarPosition || { x: user?.avatarX || 0, y: user?.avatarY || 0 }}
                   borderRadius={37}
                   color={[255, 255, 255, 0.6]} // RGBA
                   scale={1}

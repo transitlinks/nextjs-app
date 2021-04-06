@@ -6,7 +6,7 @@ import styles from './account.module.css';
 import Profile from "../../components/Account/Profile";
 import { getClient } from "../../apolloClient";
 import { GET_USER } from "../../queries/user";
-import { UserInput } from "../../generated/types/globalTypes";
+import { getUser_getUser } from "../../generated/types/getUser";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }: GetServerSidePropsContext) => {
 
@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }: GetServerS
 };
 
 interface AccountProps {
-  user: UserInput;
+  user: getUser_getUser;
 }
 
 const Account = ({ user }: AccountProps) => {
@@ -36,13 +36,8 @@ const Account = ({ user }: AccountProps) => {
       </Head>
       <main className={styles.root}>
         <div className={styles.container}>
-          <div className={styles.logOut}>
-            <Button color="primary" variant="contained" onClick={() => { location.href = "/auth/logout" }}>
-              Sign out
-            </Button>
-          </div>
           <div>
-            <Profile user={user} withAccount={true} />
+            <Profile user={user} />
           </div>
         </div>
       </main>

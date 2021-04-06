@@ -23,6 +23,7 @@ export const GET_USER = gql`query getUser {
     avatarSource,
     avatarX,
     avatarY,
-    avatarScale
+    avatarScale,
+    logins
   }
 }`;

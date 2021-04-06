@@ -18,6 +18,7 @@ export interface getUser_getUser {
   avatarX: number | null;
   avatarY: number | null;
   avatarScale: number | null;
+  logins: number | null;
 }
 
 export interface getUser {

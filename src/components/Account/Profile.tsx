@@ -1,6 +1,6 @@
 import styles from './Profile.module.css';
 import { isValidEmail, isValidPassword } from "../ValidatedInput/validators";
-import ValidatedInput, { InputState, TextInputState } from "../ValidatedInput/ValidatedInput";
+import ValidatedInput, { TextInputState } from "../ValidatedInput/ValidatedInput";
 import Button from "@material-ui/core/Button";
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
@@ -10,18 +10,18 @@ import { UserInput } from '../../generated/types/globalTypes';
 
 import dynamic from "next/dynamic";
 import { Position } from "react-avatar-editor";
-import { UPLOAD_FILE } from "../../queries/account";
+import { UPLOAD_AVATAR } from "../../queries/account";
 import { uploadAvatar, uploadAvatarVariables } from "../../generated/types/uploadAvatar";
 import { useDispatch } from "react-redux";
 import { updateHeader } from "../../state/actions/header";
+import { getUser_getUser } from "../../generated/types/getUser";
 const ProfileSettings = dynamic(() => import('./ProfileSettings'), { ssr: false });
 
 interface ProfileProps {
-  user: UserInput;
-  withAccount: boolean;
+  user: getUser_getUser;
 }
 
-const Profile = ({ user, withAccount }: ProfileProps) => {
+const Profile = ({ user }: ProfileProps) => {
 
   const dispatch = useDispatch();
 
@@ -33,7 +33,7 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
   const [updateProfileSettings, updateProfileSettingsResult] = getUpdateUserMutation();
   const [updatePassword, updatePasswordResult] = getUpdateUserMutation();
 
-  const [uploadAvatar, uploadAvatarResult] = useMutation<uploadAvatar, uploadAvatarVariables>(UPLOAD_FILE, { errorPolicy: 'all' });
+  const [uploadAvatar, uploadAvatarResult] = useMutation<uploadAvatar, uploadAvatarVariables>(UPLOAD_AVATAR, { errorPolicy: 'all' });
   const uploadedAvatar = uploadAvatarResult?.data?.uploadAvatar?.avatar;
   useEffect(() => {
     if (uploadedAvatar) {
@@ -69,6 +69,7 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
   const updatedProfileSettingsError = updateProfileSettingsResult?.error;
   useEffect(() => {
     if (updatedProfileSettings && !updatedProfileSettingsError) {
+      if (user.logins === 1) window.location.href = '/';
       setAvatarFile(null);
     }
   }, [updatedProfileSettings, updatedProfileSettingsError]);
@@ -109,7 +110,7 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
       uploadAvatar({ variables: { file: avatarFile, type: 'source' } });
     }
 
-    if (avatarPositionChanged) {
+    if (avatarFile || avatarPositionChanged) {
       const canvasScaled = avatarEditor.getImageScaledToCanvas();
       canvasScaled.toBlob((blob: any) => {
         const file = new File([blob], `${uuid}.jpg`, { type: 'image/jpeg' });
@@ -137,6 +138,14 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
 
 	return (
     <div>
+      {
+        user.logins !== 1 &&
+          <div className={styles.logOut}>
+            <Button color="primary" variant="contained" onClick={() => { location.href = "/auth/logout" }}>
+              Sign out
+            </Button>
+          </div>
+      }
       <div>
         <ProfileSettings
           profileSettingsValues={user}
@@ -154,7 +163,7 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
            }} />
       </div>
       {
-        withAccount ?
+        user.logins !== 1 ?
           <div id="profile-fields" className={styles.emailPassword}>
             <div className={styles.email}>
               <ValidatedInput id="email-input"

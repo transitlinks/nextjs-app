@@ -38,3 +38,21 @@
 .save .button {
   margin-left: 12px;
 }
+
+.submit {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.logOut {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.logOut .logOutLink {
+
+}

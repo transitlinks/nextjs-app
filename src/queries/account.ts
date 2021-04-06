@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const UPLOAD_FILE = gql`
+export const UPLOAD_AVATAR = gql`
   mutation uploadAvatar($file: Upload!, $type: String) {
     uploadAvatar(file: $file, type: $type) {
       uuid,

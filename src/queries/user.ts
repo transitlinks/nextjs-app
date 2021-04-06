@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from "@apollo/client";
 
 export const UPDATE_USER = gql`mutation updateUser($uuid: String!, $values: UserInput!) {
   updateUser (uuid: $uuid, values: $values) {

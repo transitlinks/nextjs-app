@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from "next/link";
 
 import styles from './UserControls.module.css';
@@ -8,6 +8,7 @@ import { EnvState } from "../../state/types/global";
 import { useQuery } from "@apollo/client";
 import { getUser } from "../../generated/types/getUser";
 import { GET_USER } from '../../queries/user';
+import { HeaderState } from "../../state/types/header";
 
 interface UserControlProps {
   savedProfile?: User
@@ -17,6 +18,7 @@ const UserControls = ({ savedProfile }: UserControlProps) => {
 
   const { data } = useQuery<getUser>(GET_USER);
   const env = useSelector<RootState, EnvState>((state) => state.env);
+  const { avatar } = useSelector<RootState, HeaderState>((state) => state.header);
 
   const user = data?.getUser;
 
@@ -27,7 +29,7 @@ const UserControls = ({ savedProfile }: UserControlProps) => {
           <div id="logout-link">
             <Link href="/account">
               <div className={styles.avatar}>
-                <img src={user.avatar ? `${env.MEDIA_URL}${user.avatar}?${(new Date()).getTime()}` : user.photo!} />
+                <img src={`${env.MEDIA_URL}${avatar || user.avatar}?${(new Date()).getTime()}`} />
               </div>
             </Link>
           </div>

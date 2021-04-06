@@ -18,7 +18,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }: GetServerS
   });
 
   const { MEDIA_URL, APP_URL } = process.env;
-  console.log('query data', data);
 
   return { props: { user: data.getUser, env: { MEDIA_URL, APP_URL } } };
 

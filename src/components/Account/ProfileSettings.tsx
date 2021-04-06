@@ -12,7 +12,7 @@ import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 interface ProfileSettingsProps {
   profileSettingsValues: UserInput;
   onChangeUsername: (input: TextInputState) => void;
-  onChangeAvatarFile: (avatarFile: string) => void;
+  onChangeAvatarFile: (avatarFile: File) => void;
   onChangeAvatarPosition: (avatarFile: Position) => void;
   onLoadAvatarEditor: (avatarEditor: any) => void;
 }
@@ -42,7 +42,7 @@ const ProfileSettings = (
     if (files && files.length > 0) {
       const [file] = files;
       setAvatarFile(file);
-      onChangeAvatarFile(file.name);
+      onChangeAvatarFile(file);
     }
   };
 

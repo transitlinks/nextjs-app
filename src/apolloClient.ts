@@ -1,4 +1,5 @@
-import { ApolloClient, InMemoryCache, createHttpLink, from, ApolloLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, from } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error';
 import * as https from "https";
@@ -8,23 +9,7 @@ const getHttpLink = (appUri?: string) => {
   const graphQlUri = `${appUri || process.env.APP_URL}/v2/graphql`;
   console.log('GraphQL @ ' + graphQlUri);
 
-  const httpLink = createHttpLink({
-    uri: graphQlUri,
-    fetchOptions: {
-      agent: new https.Agent({ rejectUnauthorized: false }),
-    },
-  });
-
-  return httpLink;
-
-};
-
-const getServerHttpLink = () => {
-
-  const graphQlUri = `${process.env.APP_URL}/v2/graphql`;
-  console.log('GraphQL @ ' + graphQlUri);
-
-  const httpLink = createHttpLink({
+  const httpLink = createUploadLink({
     uri: graphQlUri,
     fetchOptions: {
       agent: new https.Agent({ rejectUnauthorized: false }),

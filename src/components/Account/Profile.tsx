@@ -10,6 +10,10 @@ import { UserInput } from '../../generated/types/globalTypes';
 
 import dynamic from "next/dynamic";
 import { Position } from "react-avatar-editor";
+import { UPLOAD_FILE } from "../../queries/account";
+import { uploadAvatar, uploadAvatarVariables } from "../../generated/types/uploadAvatar";
+import { useDispatch } from "react-redux";
+import { updateHeader } from "../../state/actions/header";
 const ProfileSettings = dynamic(() => import('./ProfileSettings'), { ssr: false });
 
 interface ProfileProps {
@@ -19,6 +23,8 @@ interface ProfileProps {
 
 const Profile = ({ user, withAccount }: ProfileProps) => {
 
+  const dispatch = useDispatch();
+
   const getUpdateUserMutation = () => useMutation<
     updateUser,
     updateUserVariables
@@ -27,7 +33,13 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
   const [updateProfileSettings, updateProfileSettingsResult] = getUpdateUserMutation();
   const [updatePassword, updatePasswordResult] = getUpdateUserMutation();
 
-  //console.log('Update profile result', updateProfileSettingsResult);
+  const [uploadAvatar, uploadAvatarResult] = useMutation<uploadAvatar, uploadAvatarVariables>(UPLOAD_FILE, { errorPolicy: 'all' });
+  const uploadedAvatar = uploadAvatarResult?.data?.uploadAvatar?.avatar;
+  useEffect(() => {
+    if (uploadedAvatar) {
+      dispatch(updateHeader({ avatar: uploadedAvatar }));
+    }
+  }, [uploadedAvatar]);
 
   const profileUser = updateProfileSettingsResult?.data?.updateUser || user;
 
@@ -36,7 +48,7 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
   const [emailInput, setEmailInput] = useState<TextInputState>({ value: user?.email || '', pass: true });
   const [usernameInput, setUsernameInput] = useState<TextInputState>({ value: user?.username || '', pass: true });
   const [avatarEditor, setAvatarEditor] = useState<any | null>(null);
-  const [avatarFile, setAvatarFile] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPosition, setAvatarPosition] = useState<Position>({ x: avatarX || 0, y: avatarY || 0 });
   const [avatarSource, setAvatarSource] = useState<string | null>(user?.avatarSource || null);
   const [passwordInput, setPasswordInput] = useState<TextInputState>({ value: '', pass: false });
@@ -79,30 +91,29 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
     });
   };
 
+  const avatarPositionChanged = (
+    profileUser.avatarX !== avatarPosition.x ||
+    profileUser.avatarY !== avatarPosition.y
+  );
+
+  const valuesChanged = profileUser && (
+    profileUser.username !== usernameInput.value ||
+    profileUser.email !== emailInput.value ||
+    avatarPositionChanged ||
+    avatarFile
+  );
+
   const saveProfileSettings = (input?: UserInput) => {
 
     if (avatarFile) {
-      console.log('Upload file: ' + avatarFile);
-      /*
-      uploadFiles({
-        entityType: 'AvatarSource',
-        entityUuid: uuid!
-      }, [avatarFile]);
-       */
-
+      uploadAvatar({ variables: { file: avatarFile, type: 'source' } });
     }
 
-    if (avatarFile) {
+    if (avatarPositionChanged) {
       const canvasScaled = avatarEditor.getImageScaledToCanvas();
       canvasScaled.toBlob((blob: any) => {
         const file = new File([blob], `${uuid}.jpg`, { type: 'image/jpeg' });
-        console.log('Upload blob: ' + file);
-        /*
-        uploadFiles({
-          entityType: 'Avatar',
-          entityUuid: uuid!
-        }, [file]);
-         */
+        uploadAvatar({ variables: { file, type: 'scaled' } });
       }, 'image/jpeg');
     }
 
@@ -118,19 +129,9 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
       }
     };
 
-    console.log('Update payload', updatePayload);
     return updateProfileSettings(updatePayload);
 
   };
-
-  //console.log('CHECK', profileUser, usernameInput.value, emailInput.value, avatarPosition.x, avatarPosition.y, avatarFile);
-  const valuesChanged = profileUser && (
-    profileUser.username !== usernameInput.value ||
-    profileUser.email !== emailInput.value ||
-    profileUser.avatarX !== avatarPosition.x ||
-    profileUser.avatarY !== avatarPosition.y ||
-    avatarFile
-  );
 
   const valuesValid = emailInput.pass && usernameInput.pass;
 
@@ -142,7 +143,7 @@ const Profile = ({ user, withAccount }: ProfileProps) => {
           onChangeUsername={(input: TextInputState) => {
              setUsernameInput(input);
            }}
-           onChangeAvatarFile={(avatarFile: string) => {
+           onChangeAvatarFile={(avatarFile: File) => {
              setAvatarFile(avatarFile);
            }}
            onChangeAvatarPosition={(position: Position) => {

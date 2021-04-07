@@ -4,10 +4,7 @@
 }
 
 .container {
-  width: calc(100% - 16px);
   position: relative;
-  margin-left: 8px;
-  margin-right: 8px;
 }
 
 .settings {
@@ -15,7 +12,7 @@
   width: 100%;
   margin-top: 28px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .displayName {

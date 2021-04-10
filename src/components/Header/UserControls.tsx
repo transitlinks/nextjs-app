@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client";
 import { getUser } from "../../generated/types/getUser";
 import { GET_USER } from '../../queries/user';
 import { HeaderState } from "../../state/types/header";
+import { getImageUrl } from "../utils";
 
 interface UserControlProps {
   savedProfile?: User
@@ -21,6 +22,8 @@ const UserControls = ({ savedProfile }: UserControlProps) => {
   const { avatar } = useSelector<RootState, HeaderState>((state) => state.header);
 
   const user = data?.getUser;
+  let avatarImage = getImageUrl(avatar || user?.avatar || user?.avatarSource, env.MEDIA_URL);
+  if (avatarImage) avatarImage += `?${(new Date()).getTime()}`;
 
   return (
     <div className={styles.content}>
@@ -29,7 +32,7 @@ const UserControls = ({ savedProfile }: UserControlProps) => {
           <div id="logout-link">
             <Link href="/account">
               <div className={styles.avatar}>
-                <img src={`${env.MEDIA_URL}${avatar || user.avatar}?${(new Date()).getTime()}`} />
+                <img src={avatarImage || user.photo!} />
               </div>
             </Link>
           </div>

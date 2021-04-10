@@ -8,6 +8,7 @@ import { RootState } from "../../state/reducers";
 import { EnvState } from "../../state/types/global";
 import AvatarEditor, { Position } from "react-avatar-editor";
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import { getImageUrl } from "../utils";
 
 interface ProfileSettingsProps {
   profileSettingsValues: UserInput;
@@ -29,7 +30,7 @@ const ProfileSettings = (
   const env = useSelector<RootState, EnvState>((state) => state.env);
 
   const { avatarSource, avatarX, avatarY, username } = profileSettingsValues;
-  const initialAvatarSource = avatarSource ? `${env.MEDIA_URL}${avatarSource}` : null;
+  let initialAvatarSource = getImageUrl(avatarSource, env.MEDIA_URL);
 
   const [usernameInput, setUsernameInput] = useState<TextInputState>({ value: username || '', pass: false });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
